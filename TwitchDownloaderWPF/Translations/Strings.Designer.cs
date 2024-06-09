@@ -168,6 +168,78 @@ namespace TwitchDownloaderWPF.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Broadcaster.
+        /// </summary>
+        public static string BadgeMaskBroadcaster {
+            get {
+                return ResourceManager.GetString("BadgeMaskBroadcaster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mods.
+        /// </summary>
+        public static string BadgeMaskModerator {
+            get {
+                return ResourceManager.GetString("BadgeMaskModerator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Audio/No Video.
+        /// </summary>
+        public static string BadgeMaskNoAudioNoVideo {
+            get {
+                return ResourceManager.GetString("BadgeMaskNoAudioNoVideo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Others.
+        /// </summary>
+        public static string BadgeMaskOthers {
+            get {
+                return ResourceManager.GetString("BadgeMaskOthers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Predictions.
+        /// </summary>
+        public static string BadgeMaskPredictions {
+            get {
+                return ResourceManager.GetString("BadgeMaskPredictions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subs.
+        /// </summary>
+        public static string BadgeMaskSubscriber {
+            get {
+                return ResourceManager.GetString("BadgeMaskSubscriber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prime.
+        /// </summary>
+        public static string BadgeMaskTwitchPrime {
+            get {
+                return ResourceManager.GetString("BadgeMaskTwitchPrime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VIPs.
+        /// </summary>
+        public static string BadgeMaskVIP {
+            get {
+                return ResourceManager.GetString("BadgeMaskVIP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Badge Scale:.
         /// </summary>
         public static string BadgeScale {
@@ -825,6 +897,87 @@ namespace TwitchDownloaderWPF.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The file {0} already exists. Do you want to overwrite it?.
+        /// </summary>
+        public static string FileAlreadyExistsBody {
+            get {
+                return ResourceManager.GetString("FileAlreadyExistsBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string FileAlreadyExistsCancel {
+            get {
+                return ResourceManager.GetString("FileAlreadyExistsCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The task will be canceled..
+        /// </summary>
+        public static string FileAlreadyExistsCancelDescription {
+            get {
+                return ResourceManager.GetString("FileAlreadyExistsCancelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} already exists..
+        /// </summary>
+        public static string FileAlreadyExistsHeader {
+            get {
+                return ResourceManager.GetString("FileAlreadyExistsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overwrite.
+        /// </summary>
+        public static string FileAlreadyExistsOverwrite {
+            get {
+                return ResourceManager.GetString("FileAlreadyExistsOverwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The existing file will be overwritten..
+        /// </summary>
+        public static string FileAlreadyExistsOverwriteDescription {
+            get {
+                return ResourceManager.GetString("FileAlreadyExistsOverwriteDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remember my choice for this session.
+        /// </summary>
+        public static string FileAlreadyExistsRememberMyChoice {
+            get {
+                return ResourceManager.GetString("FileAlreadyExistsRememberMyChoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename.
+        /// </summary>
+        public static string FileAlreadyExistsRename {
+            get {
+                return ResourceManager.GetString("FileAlreadyExistsRename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The new file will be renamed..
+        /// </summary>
+        public static string FileAlreadyExistsRenameDescription {
+            get {
+                return ResourceManager.GetString("FileAlreadyExistsRenameDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {title} {id} {date} {channel} {date_custom=&quot;&quot;} {random_string} {trim_start} {trim_end} {trim_start_custom=&quot;&quot;} {trim_end_custom=&quot;&quot;} {length} {length_custom=&quot;&quot;} {views} {game}.
         /// </summary>
         public static string FilenameTemplateParameters {
@@ -929,6 +1082,15 @@ namespace TwitchDownloaderWPF.Translations {
         public static string IgnoreUsersListTooltip {
             get {
                 return ResourceManager.GetString("IgnoreUsersListTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Increase Username Readability:.
+        /// </summary>
+        public static string IncreaseUsernameReadability {
+            get {
+                return ResourceManager.GetString("IncreaseUsernameReadability", resourceCulture);
             }
         }
         
@@ -1856,6 +2018,15 @@ namespace TwitchDownloaderWPF.Translations {
         public static string TitleEnqueueOptions {
             get {
                 return ResourceManager.GetString("TitleEnqueueOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File already exists.
+        /// </summary>
+        public static string TitleFileAlreadyExists {
+            get {
+                return ResourceManager.GetString("TitleFileAlreadyExists", resourceCulture);
             }
         }
         
