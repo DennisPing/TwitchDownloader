@@ -6,10 +6,14 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Lewis Pardo</Authors>
-    <Version>1.54.3</Version>
+    <Version>1.54.4</Version>
     <Platforms>AnyCPU;x64</Platforms>
     <LangVersion>default</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Title>TwitchDownloaderCore</Title>
+    <Description>A mirror of TwitchDownloaderCore C# library</Description>
+    <PackageProjectUrl>https://github.com/lay295/TwitchDownloader</PackageProjectUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <!--TODO: <Nullable>enable</Nullable> once we have required keyword-->
   </PropertyGroup>
 
