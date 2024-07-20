@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <Version>1.54.4</Version>
+    <Version>1.54.9</Version>
     <Copyright>Copyright © lay295 and contributors</Copyright>
     <Description>Download and render Twitch VODs, clips, and chats</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Platforms>AnyCPU;x64</Platforms>
     <TargetFramework>net6.0</TargetFramework>
-    <LangVersion>default</LangVersion>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
@@ -114,7 +113,7 @@ namespace TwitchDownloaderWPF
 
         private static string ValidateUrl(string text)
         {
-            var clipIdMatch = TwitchRegex.MatchClipId(text);
+            var clipIdMatch = IdParse.MatchClipId(text);
             return clipIdMatch is { Success: true }
                 ? clipIdMatch.Value
                 : null;
@@ -202,7 +201,7 @@ namespace TwitchDownloaderWPF
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "MP4 Files | *.mp4",
-                FileName = FilenameService.GetFilename(Settings.Default.TemplateClip, textTitle.Text, clipId, currentVideoTime, textStreamer.Text, TimeSpan.Zero, clipLength, viewCount.ToString(), game) + ".mp4"
+                FileName = FilenameService.GetFilename(Settings.Default.TemplateClip, textTitle.Text, clipId, currentVideoTime, textStreamer.Text, TimeSpan.Zero, clipLength, viewCount, game) + ".mp4"
             };
             if (saveFileDialog.ShowDialog() != true)
             {

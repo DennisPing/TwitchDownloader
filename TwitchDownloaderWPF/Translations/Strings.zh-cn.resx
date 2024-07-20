@@ -124,7 +124,7 @@
     <value>添加至队列</value>
   </data>
   <data name="AlphaNotSupportedByCodec" xml:space="preserve">
-    <value>你为不支持透明度的容器 / 编解码器选择了 alpha 通道（透明度）。移除透明度或使用 MOV + RLE/PRORES 或 WEBM + VP8/VP9 编码</value>
+    <value>你为不支持透明度的容器 / 编解码器选择了 Alpha 通道（透明度）。移除透明度或使用 MOV + RLE/PRORES 或 WEBM + VP8/VP9 编码</value>
   </data>
   <data name="ApplicationTheme" xml:space="preserve">
     <value>主题 </value>
@@ -574,7 +574,7 @@
     <value>视频过期或嵌入的 ID 损坏</value>
   </data>
   <data name="VodLinkId" xml:space="preserve">
-    <value>点播链接 / ID</value>
+    <value>点播链接 / ID：</value>
   </data>
   <data name="TemplateVods" xml:space="preserve">
     <value>点播：</value>
@@ -706,7 +706,7 @@
     <value>本地</value>
   </data>
   <data name="SettingsTimeFormat" xml:space="preserve">
-    <value>时间格式</value>
+    <value>时间格式：</value>
   </data>
   <data name="NoJsonFilesSelected" xml:space="preserve">
     <value>未选择 JSON 文件</value>
@@ -727,7 +727,7 @@
     <value>无</value>
   </data>
   <data name="MaskWithNoAlpha" xml:space="preserve">
-    <value>你选择了生成不透明背景的遮罩。降低背景颜色 alpha 或禁用生成遮罩。</value>
+    <value>你选择了生成不透明背景的遮罩。降低背景颜色 Alpha 或禁用生成遮罩。</value>
   </data>
   <data name="OutlineScale" xml:space="preserve">
     <value>边框比例：</value>
@@ -742,7 +742,7 @@
     <value>发生未知错误</value>
   </data>
   <data name="TaskCouldNotBeRemoved" xml:space="preserve">
-    <value>此任务无法被移除</value>
+    <value>无法移除此任务</value>
   </data>
   <data name="CancelTaskBeforeRemoving" xml:space="preserve">
     <value>请取消任务或等待任务完成后再将其删除</value>
@@ -900,33 +900,45 @@
     <value>其他</value>
   </data>
   <data name="TitleFileAlreadyExists" xml:space="preserve">
-    <value>File already exists</value>
+    <value>文件已存在</value>
   </data>
   <data name="FileAlreadyExistsHeader" xml:space="preserve">
-    <value>{0} already exists.</value>
+    <value>{0} 已存在。</value>
   </data>
   <data name="FileAlreadyExistsBody" xml:space="preserve">
-    <value>The file {0} already exists. Do you want to overwrite it?</value>
+    <value>文件 {0} 已存在。你想要覆盖它吗？</value>
   </data>
   <data name="FileAlreadyExistsOverwrite" xml:space="preserve">
-    <value>Overwrite</value>
+    <value>覆盖</value>
   </data>
   <data name="FileAlreadyExistsOverwriteDescription" xml:space="preserve">
-    <value>The existing file will be overwritten.</value>
+    <value>已存在文件将被覆盖。</value>
   </data>
   <data name="FileAlreadyExistsRename" xml:space="preserve">
-    <value>Rename</value>
+    <value>重新命名</value>
   </data>
   <data name="FileAlreadyExistsRenameDescription" xml:space="preserve">
-    <value>The new file will be renamed.</value>
+    <value>新文件将被重新命名。</value>
   </data>
   <data name="FileAlreadyExistsCancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>取消</value>
   </data>
   <data name="FileAlreadyExistsCancelDescription" xml:space="preserve">
-    <value>The task will be canceled.</value>
+    <value>任务将被取消。</value>
   </data>
   <data name="FileAlreadyExistsRememberMyChoice" xml:space="preserve">
-    <value>Remember my choice for this session</value>
+    <value>记住我的选择</value>
+  </data>
+  <data name="VideoTrimMode" xml:space="preserve">
+    <value>修剪模式 </value><comment>Leave a trailing space</comment>
+  </data>
+  <data name="VideoTrimModeSafe" xml:space="preserve">
+    <value>安全</value>
+  </data>
+  <data name="VideoTrimModeExact" xml:space="preserve">
+    <value>精确</value>
+  </data>
+  <data name="VideoTrimModeTooltip" xml:space="preserve">
+    <value>使用精确模式修剪的视频在前几秒或最后几秒可能会出现视频 / 音频卡顿。安全模式保证不会出现卡顿，但可能会导致视频稍长。</value>
   </data>
 </root>

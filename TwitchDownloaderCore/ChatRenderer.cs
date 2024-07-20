@@ -58,7 +58,7 @@ namespace TwitchDownloaderCore
         {
             renderOptions = chatRenderOptions;
             renderOptions.TempFolder = Path.Combine(
-                string.IsNullOrWhiteSpace(renderOptions.TempFolder) ? Path.GetTempPath() : renderOptions.TempFolder,
+                string.IsNullOrWhiteSpace(renderOptions.TempFolder) ? Path.GetTempPath() : Path.GetFullPath(renderOptions.TempFolder),
                 "TwitchDownloader");
             renderOptions.BlockArtPreWrapWidth = 29.166 * renderOptions.FontSize - renderOptions.SidePadding * 2;
             renderOptions.BlockArtPreWrap = renderOptions.ChatWidth > renderOptions.BlockArtPreWrapWidth;
@@ -79,6 +79,23 @@ namespace TwitchDownloaderCore
             await using var outputFs = outputFileInfo.Open(FileMode.Create, FileAccess.Write, FileShare.Read);
             await using var maskFs = maskFileInfo?.Open(FileMode.Create, FileAccess.Write, FileShare.Read);
 
+            try
+            {
+                await RenderAsyncImpl(outputFileInfo, outputFs, maskFileInfo, maskFs, cancellationToken);
+            }
+            catch
+            {
+                await Task.Delay(100, CancellationToken.None);
+
+                TwitchHelper.CleanUpClaimedFile(outputFileInfo, outputFs, _progress);
+                TwitchHelper.CleanUpClaimedFile(maskFileInfo, maskFs, _progress);
+
+                throw;
+            }
+        }
+
+        private async Task RenderAsyncImpl(FileInfo outputFileInfo, FileStream outputFs, FileInfo maskFileInfo, FileStream maskFs, CancellationToken cancellationToken)
+        {
             _progress.SetStatus("Fetching Images [1/2]");
             await Task.Run(() => FetchScaledImages(cancellationToken), cancellationToken);
 
@@ -540,17 +557,24 @@ namespace TwitchDownloaderCore
             {
                 if (comment.message.user_notice_params.msg_id is not "highlighted-message" and not "sub" and not "resub" and not "subgift" and not "")
                 {
+                    _progress.LogVerbose($"{comment._id} has invalid {nameof(comment.message.user_notice_params)}: {comment.message.user_notice_params.msg_id}.");
                     return null;
                 }
-                if (comment.message.user_notice_params.msg_id == "highlighted-message" && comment.message.fragments == null && comment.message.body != null)
+
+                if (comment.message.user_notice_params.msg_id == "highlighted-message")
                 {
-                    comment.message.fragments = new List<Fragment> { new Fragment() };
-                    comment.message.fragments[0].text = comment.message.body;
+                    if (comment.message.fragments == null && comment.message.body != null)
+                    {
+                        comment.message.fragments = new List<Fragment> { new() { text = comment.message.body } };
+                    }
+
                     highlightType = HighlightType.ChannelPointHighlight;
                 }
             }
+
             if (comment.message.fragments == null || comment.commenter == null)
             {
+                _progress.LogVerbose($"{comment._id} lacks fragments and/or a commenter.");
                 return null;
             }
 
@@ -1722,7 +1746,7 @@ namespace TwitchDownloaderCore
 
         private async Task<List<CheerEmote>> GetScaledBits(CancellationToken cancellationToken)
         {
-            var cheerTask = await TwitchHelper.GetBits(chatRoot.comments, renderOptions.TempFolder, chatRoot.streamer.id.ToString(), chatRoot.embeddedData, renderOptions.Offline, cancellationToken);
+            var cheerTask = await TwitchHelper.GetBits(chatRoot.comments, renderOptions.TempFolder, chatRoot.streamer.id.ToString(), _progress, chatRoot.embeddedData, renderOptions.Offline, cancellationToken);
 
             foreach (var cheer in cheerTask)
             {
@@ -1857,7 +1881,6 @@ namespace TwitchDownloaderCore
             chatRoot = await ChatJson.DeserializeAsync(renderOptions.InputFile, true, false, true, cancellationToken);
             return chatRoot;
         }
-
 
 #region ImplementIDisposable
 

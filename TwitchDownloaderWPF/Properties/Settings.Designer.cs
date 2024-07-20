@@ -108,7 +108,7 @@ namespace TwitchDownloaderWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.2")]
         public double UpdateTime {
             get {
                 return ((double)(this["UpdateTime"]));
@@ -912,13 +912,61 @@ namespace TwitchDownloaderWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool AdjustUsernameVisibility {
             get {
                 return ((bool)(this["AdjustUsernameVisibility"]));
             }
             set {
                 this["AdjustUsernameVisibility"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int VodTrimMode {
+            get {
+                return ((int)(this["VodTrimMode"]));
+            }
+            set {
+                this["VodTrimMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ChatJsonCompression {
+            get {
+                return ((int)(this["ChatJsonCompression"]));
+            }
+            set {
+                this["ChatJsonCompression"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ChatTextTimestampStyle {
+            get {
+                return ((int)(this["ChatTextTimestampStyle"]));
+            }
+            set {
+                this["ChatTextTimestampStyle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PreferredQuality {
+            get {
+                return ((string)(this["PreferredQuality"]));
+            }
+            set {
+                this["PreferredQuality"] = value;
             }
         }
     }

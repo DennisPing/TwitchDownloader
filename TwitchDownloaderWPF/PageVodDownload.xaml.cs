@@ -51,6 +51,8 @@ namespace TwitchDownloaderWPF
             checkEnd.IsEnabled = isEnabled;
             SplitBtnDownload.IsEnabled = isEnabled;
             MenuItemEnqueue.IsEnabled = isEnabled;
+            RadioTrimSafe.IsEnabled = isEnabled;
+            RadioTrimExact.IsEnabled = isEnabled;
             SetEnabledTrimStart(isEnabled & checkStart.IsChecked.GetValueOrDefault());
             SetEnabledTrimEnd(isEnabled & checkEnd.IsChecked.GetValueOrDefault());
         }
@@ -204,7 +206,7 @@ namespace TwitchDownloaderWPF
                 Filename = filename ?? Path.Combine(folder, FilenameService.GetFilename(Settings.Default.TemplateVod, textTitle.Text, currentVideoId.ToString(), currentVideoTime, textStreamer.Text,
                     checkStart.IsChecked == true ? new TimeSpan((int)numStartHour.Value, (int)numStartMinute.Value, (int)numStartSecond.Value) : TimeSpan.Zero,
                     checkEnd.IsChecked == true ? new TimeSpan((int)numEndHour.Value, (int)numEndMinute.Value, (int)numEndSecond.Value) : vodLength,
-                    viewCount.ToString(), game) + (comboQuality.Text.Contains("Audio", StringComparison.OrdinalIgnoreCase) ? ".m4a" : ".mp4")),
+                    viewCount, game) + (comboQuality.Text.Contains("Audio", StringComparison.OrdinalIgnoreCase) ? ".m4a" : ".mp4")),
                 Oauth = TextOauth.Text,
                 Quality = GetQualityWithoutSize(comboQuality.Text),
                 Id = currentVideoId,
@@ -215,6 +217,12 @@ namespace TwitchDownloaderWPF
                 FfmpegPath = "ffmpeg",
                 TempFolder = Settings.Default.TempPath
             };
+
+            if (RadioTrimSafe.IsChecked == true)
+                options.TrimMode = VideoTrimMode.Safe;
+            else if (RadioTrimExact.IsChecked == true)
+                options.TrimMode = VideoTrimMode.Exact;
+
             return options;
         }
 
@@ -277,7 +285,7 @@ namespace TwitchDownloaderWPF
 
         private static long ValidateUrl(string text)
         {
-            var vodIdMatch = TwitchRegex.MatchVideoId(text);
+            var vodIdMatch = IdParse.MatchVideoId(text);
             if (vodIdMatch is {Success: true} && long.TryParse(vodIdMatch.ValueSpan, out var vodId))
             {
                 return vodId;
@@ -338,6 +346,11 @@ namespace TwitchDownloaderWPF
             WebRequest.DefaultWebProxy = null;
             numDownloadThreads.Value = Settings.Default.VodDownloadThreads;
             TextOauth.Text = Settings.Default.OAuth;
+            _ = (VideoTrimMode)Settings.Default.VodTrimMode switch
+            {
+                VideoTrimMode.Exact => RadioTrimExact.IsChecked = true,
+                _ => RadioTrimSafe.IsChecked = true,
+            };
         }
 
         private void numDownloadThreads_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
@@ -412,7 +425,7 @@ namespace TwitchDownloaderWPF
                 FileName = FilenameService.GetFilename(Settings.Default.TemplateVod, textTitle.Text, currentVideoId.ToString(), currentVideoTime, textStreamer.Text,
                     checkStart.IsChecked == true ? new TimeSpan((int)numStartHour.Value, (int)numStartMinute.Value, (int)numStartSecond.Value) : TimeSpan.Zero,
                     checkEnd.IsChecked == true ? new TimeSpan((int)numEndHour.Value, (int)numEndMinute.Value, (int)numEndSecond.Value) : vodLength,
-                    viewCount.ToString(), game) + ".mp4"
+                    viewCount, game) + (comboQuality.Text.Contains("Audio", StringComparison.OrdinalIgnoreCase) ? ".m4a" : ".mp4")
             };
             if (saveFileDialog.ShowDialog() == false)
             {
@@ -545,6 +558,24 @@ namespace TwitchDownloaderWPF
             {
                 await GetVideoInfo();
                 e.Handled = true;
+            }
+        }
+
+        private void RadioTrimSafe_OnCheckedStateChanged(object sender, RoutedEventArgs e)
+        {
+            if (IsInitialized)
+            {
+                Settings.Default.VodTrimMode = (int)VideoTrimMode.Safe;
+                Settings.Default.Save();
+            }
+        }
+
+        private void RadioTrimExact_OnCheckedStateChanged(object sender, RoutedEventArgs e)
+        {
+            if (IsInitialized)
+            {
+                Settings.Default.VodTrimMode = (int)VideoTrimMode.Exact;
+                Settings.Default.Save();
             }
         }
     }

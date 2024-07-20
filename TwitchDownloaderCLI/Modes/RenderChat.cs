@@ -19,7 +19,7 @@ namespace TwitchDownloaderCLI.Modes
 
             FfmpegHandler.DetectFfmpeg(inputOptions.FfmpegPath, progress);
 
-            var collisionHandler = new FileCollisionHandler(inputOptions);
+            var collisionHandler = new FileCollisionHandler(inputOptions, progress);
             var renderOptions = GetRenderOptions(inputOptions, collisionHandler, progress);
 
             using var chatRenderer = new ChatRenderer(renderOptions, progress);
@@ -94,7 +94,7 @@ namespace TwitchDownloaderCLI.Modes
                 AccentStrokeScale = inputOptions.ScaleAccentStroke,
                 DisperseCommentOffsets = inputOptions.DisperseCommentOffsets,
                 AlternateMessageBackgrounds = inputOptions.AlternateMessageBackgrounds,
-                AdjustUsernameVisibility = inputOptions.AdjustUsernameVisibility,
+                AdjustUsernameVisibility = (bool)inputOptions.AdjustUsernameVisibility!,
                 FileCollisionCallback = collisionHandler.HandleCollisionCallback,
             };
 

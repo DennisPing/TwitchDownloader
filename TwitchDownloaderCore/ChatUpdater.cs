@@ -26,7 +26,7 @@ namespace TwitchDownloaderCore
             _updateOptions = updateOptions;
             _progress = progress;
             _updateOptions.TempFolder = Path.Combine(
-                string.IsNullOrWhiteSpace(_updateOptions.TempFolder) ? Path.GetTempPath() : _updateOptions.TempFolder,
+                string.IsNullOrWhiteSpace(_updateOptions.TempFolder) ? Path.GetTempPath() : Path.GetFullPath(_updateOptions.TempFolder),
                 "TwitchDownloader");
         }
 
@@ -38,6 +38,22 @@ namespace TwitchDownloaderCore
             // Open the destination file so that it exists in the filesystem.
             await using var outputFs = outputFileInfo.Open(FileMode.Create, FileAccess.Write, FileShare.Read);
 
+            try
+            {
+                await UpdateAsyncImpl(outputFileInfo, outputFs, cancellationToken);
+            }
+            catch
+            {
+                await Task.Delay(100, CancellationToken.None);
+
+                TwitchHelper.CleanUpClaimedFile(outputFileInfo, outputFs, _progress);
+
+                throw;
+            }
+        }
+
+        private async Task UpdateAsyncImpl(FileInfo outputFileInfo, FileStream outputFs, CancellationToken cancellationToken)
+        {
             chatRoot.FileInfo = new() { Version = ChatRootVersion.CurrentVersion, CreatedAt = chatRoot.FileInfo.CreatedAt, UpdatedAt = DateTime.Now };
             if (!Path.GetExtension(_updateOptions.InputFile.Replace(".gz", ""))!.Equals(".json", StringComparison.OrdinalIgnoreCase))
             {
@@ -306,7 +322,7 @@ namespace TwitchDownloaderCore
 
         private async Task BitTask(CancellationToken cancellationToken = default)
         {
-            List<CheerEmote> bitList = await TwitchHelper.GetBits(chatRoot.comments, _updateOptions.TempFolder, chatRoot.streamer.id.ToString(), _updateOptions.ReplaceEmbeds ? null : chatRoot.embeddedData, cancellationToken: cancellationToken);
+            List<CheerEmote> bitList = await TwitchHelper.GetBits(chatRoot.comments, _updateOptions.TempFolder, chatRoot.streamer.id.ToString(), _progress, _updateOptions.ReplaceEmbeds ? null : chatRoot.embeddedData, cancellationToken: cancellationToken);
 
             int inputCount = chatRoot.embeddedData.twitchBits.Count;
             chatRoot.embeddedData.twitchBits = new List<EmbedCheerEmote>();
@@ -415,26 +431,18 @@ namespace TwitchDownloaderCore
             ChatRoot newChatRoot = await ChatJson.DeserializeAsync(inputFile, getComments: true, onlyFirstAndLastComments: false, getEmbeds: false, cancellationToken);
 
             // Append the new comment section
-            SortedSet<Comment> commentsSet = new SortedSet<Comment>(new CommentOffsetComparer());
-            foreach (var comment in newChatRoot.comments)
-            {
-                if (comment.content_offset_seconds < downloadOptions.TrimEndingTime && comment.content_offset_seconds >= downloadOptions.TrimBeginningTime)
-                {
-                    commentsSet.Add(comment);
-                }
-            }
+            var commentsSet = newChatRoot.comments.ToHashSet(new CommentIdEqualityComparer());
 
             lock (_trimChatRootLock)
             {
+                commentsSet.EnsureCapacity(commentsSet.Count + chatRoot.comments.Count);
                 foreach (var comment in chatRoot.comments)
                 {
                     commentsSet.Add(comment);
                 }
 
-                List<Comment> comments = commentsSet.DistinctBy(x => x._id).ToList();
-                commentsSet.Clear();
-
-                chatRoot.comments = comments;
+                chatRoot.comments = commentsSet.ToList();
+                chatRoot.comments.Sort(new CommentOffsetComparer());
             }
         }
 

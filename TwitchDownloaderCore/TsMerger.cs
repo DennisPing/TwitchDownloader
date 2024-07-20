@@ -32,6 +32,22 @@ namespace TwitchDownloaderCore
             // Open the destination file so that it exists in the filesystem.
             await using var outputFs = outputFileInfo.Open(FileMode.Create, FileAccess.Write, FileShare.Read);
 
+            try
+            {
+                await MergeAsyncImpl(outputFileInfo, outputFs, cancellationToken);
+            }
+            catch
+            {
+                await Task.Delay(100, CancellationToken.None);
+
+                TwitchHelper.CleanUpClaimedFile(outputFileInfo, outputFs, _progress);
+
+                throw;
+            }
+        }
+
+        private async Task MergeAsyncImpl(FileInfo outputFileInfo, FileStream outputFs, CancellationToken cancellationToken)
+        {
             var isM3U8 = false;
             var isFirst = true;
             var fileList = new List<string>();
@@ -58,9 +74,7 @@ namespace TwitchDownloaderCore
 
             _progress.SetTemplateStatus("Combining Parts {0}% [2/2]", 0);
 
-            await CombineVideoParts(fileList, outputFs, cancellationToken);
-
-            _progress.ReportProgress(100);
+            await CombineVideoParts(fileList, outputFileInfo, outputFs, cancellationToken);
         }
 
         private async Task VerifyVideoParts(IReadOnlyCollection<string> fileList, CancellationToken cancellationToken)
@@ -83,6 +97,8 @@ namespace TwitchDownloaderCore
 
                 cancellationToken.ThrowIfCancellationRequested();
             }
+
+            _progress.ReportProgress(100);
 
             if (failedParts.Count != 0)
             {
@@ -115,10 +131,9 @@ namespace TwitchDownloaderCore
             return true;
         }
 
-        private async Task CombineVideoParts(IReadOnlyCollection<string> fileList, FileStream outputStream, CancellationToken cancellationToken)
+        private async Task CombineVideoParts(IReadOnlyCollection<string> fileList, FileInfo outputFileInfo, FileStream outputStream, CancellationToken cancellationToken)
         {
-            DriveInfo outputDrive = DriveHelper.GetOutputDrive(mergeOptions.OutputFile);
-            string outputFile = mergeOptions.OutputFile;
+            DriveInfo outputDrive = DriveHelper.GetOutputDrive(outputFileInfo.FullName);
 
             int partCount = fileList.Count;
             int doneCount = 0;
@@ -138,6 +153,8 @@ namespace TwitchDownloaderCore
 
                 cancellationToken.ThrowIfCancellationRequested();
             }
+
+            _progress.ReportProgress(100);
         }
     }
 }

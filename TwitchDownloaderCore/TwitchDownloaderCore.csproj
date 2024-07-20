@@ -8,7 +8,7 @@
     <Authors>Lewis Pardo</Authors>
     <Version>1.54.4</Version>
     <Platforms>AnyCPU;x64</Platforms>
-    <LangVersion>default</LangVersion>
+    <LangVersion>10</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Title>TwitchDownloaderCore</Title>
     <Description>A mirror of TwitchDownloaderCore C# library</Description>
@@ -34,7 +34,7 @@
     <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.8" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.8" />
     <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="2.88.8" />
-    <PackageReference Include="System.Text.Json" Version="8.0.3" />
+    <PackageReference Include="System.Text.Json" Version="8.0.4" />
     <PackageReference Include="Unicode.net" Version="2.0.0" />
   </ItemGroup>
 

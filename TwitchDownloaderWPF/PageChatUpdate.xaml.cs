@@ -28,7 +28,6 @@ namespace TwitchDownloaderWPF
     /// </summary>
     public partial class PageChatUpdate : Page
     {
-
         public string InputFile;
         public ChatRoot ChatJsonInfo;
         public string VideoId;
@@ -216,7 +215,21 @@ namespace TwitchDownloaderWPF
             {
                 ChatFormat.Text => radioText.IsChecked = true,
                 ChatFormat.Html => radioHTML.IsChecked = true,
-                _ => radioJson.IsChecked = true
+                ChatFormat.Json => radioJson.IsChecked = true,
+                _ => null,
+            };
+            _ = (ChatCompression)Settings.Default.ChatJsonCompression switch
+            {
+                ChatCompression.None => radioCompressionNone.IsChecked = true,
+                ChatCompression.Gzip => radioCompressionGzip.IsChecked = true,
+                _ => null,
+            };
+            _ = (TimestampFormat)Settings.Default.ChatTextTimestampStyle switch
+            {
+                TimestampFormat.Utc => radioTimestampUTC.IsChecked = true,
+                TimestampFormat.Relative => radioTimestampRelative.IsChecked = true,
+                TimestampFormat.None => radioTimestampNone.IsChecked = true,
+                _ => null,
             };
         }
 
@@ -487,7 +500,7 @@ namespace TwitchDownloaderWPF
                     ChatJsonInfo.video.id ?? ChatJsonInfo.comments.FirstOrDefault()?.content_id ?? "-1", VideoCreatedAt, textStreamer.Text,
                     checkStart.IsChecked == true ? new TimeSpan((int)numStartHour.Value, (int)numStartMinute.Value, (int)numStartSecond.Value) : TimeSpan.FromSeconds(double.IsNegative(ChatJsonInfo.video.start) ? 0.0 : ChatJsonInfo.video.start),
                     checkEnd.IsChecked == true ? new TimeSpan((int)numEndHour.Value, (int)numEndMinute.Value, (int)numEndSecond.Value) : VideoLength,
-                    ViewCount.ToString(), Game)
+                    ViewCount, Game)
             };
 
             if (radioJson.IsChecked == true)
@@ -666,6 +679,51 @@ namespace TwitchDownloaderWPF
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
             queueOptions.ShowDialog();
+        }
+
+        private void RadioCompressionNone_OnCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (!IsInitialized)
+                return;
+
+            Settings.Default.ChatJsonCompression = (int)ChatCompression.None;
+            Settings.Default.Save();
+        }
+
+        private void RadioCompressionGzip_OnCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (!IsInitialized)
+                return;
+
+            Settings.Default.ChatJsonCompression = (int)ChatCompression.Gzip;
+            Settings.Default.Save();
+        }
+
+        private void RadioTimestampUTC_OnCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (!IsInitialized)
+                return;
+
+            Settings.Default.ChatTextTimestampStyle = (int)TimestampFormat.Utc;
+            Settings.Default.Save();
+        }
+
+        private void RadioTimestampRelative_OnCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (!IsInitialized)
+                return;
+
+            Settings.Default.ChatTextTimestampStyle = (int)TimestampFormat.Relative;
+            Settings.Default.Save();
+        }
+
+        private void RadioTimestampNone_OnCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (!IsInitialized)
+                return;
+
+            Settings.Default.ChatTextTimestampStyle = (int)TimestampFormat.None;
+            Settings.Default.Save();
         }
     }
 }

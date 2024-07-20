@@ -31,16 +31,7 @@ namespace TwitchDownloaderCore.Options
         public bool Timestamp { get; set; }
         public int Framerate { get; set; }
         public double UpdateRate { get; set; }
-        public int UpdateFrame
-        {
-            get
-            {
-                if (UpdateRate == 0)
-                    return 1;
-                else
-                    return (int)(UpdateRate * Framerate);
-            }
-        }
+        public int UpdateFrame => Math.Max(1, (int)(UpdateRate * Framerate));
         public bool GenerateMask { get; set; }
         public string MaskFile
         {
@@ -72,7 +63,6 @@ namespace TwitchDownloaderCore.Options
         public double EmoteSpacingScale { get; set; } = 1.0;
         public double AccentStrokeScale { get; set; } = 1.0;
         public double AccentIndentScale { get; set; } = 1.0;
-        public int RenderThreads { get; set; } = 1;
         public int ChatBadgeMask { get; set; } = 0;
         public int StartOverride { get; set; } = -1;
         public int EndOverride { get; set; } = -1;

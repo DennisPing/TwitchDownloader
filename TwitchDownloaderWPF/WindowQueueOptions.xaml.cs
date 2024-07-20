@@ -98,6 +98,16 @@ namespace TwitchDownloaderWPF
             string queueFolder = Settings.Default.QueueFolder;
             if (Directory.Exists(queueFolder))
                 textFolder.Text = queueFolder;
+
+            var preferredQuality = Settings.Default.PreferredQuality;
+            for (var i = 0; i < ComboPreferredQuality.Items.Count; i++)
+            {
+                if (ComboPreferredQuality.Items[i] is ComboBoxItem { Content: string quality } && quality == preferredQuality)
+                {
+                    ComboPreferredQuality.SelectedIndex = i;
+                    break;
+                }
+            }
         }
 
         private FileInfo HandleFileCollisionCallback(FileInfo fileInfo)
@@ -225,7 +235,7 @@ namespace TwitchDownloaderWPF
                     {
                         Filename = Path.Combine(folderPath, FilenameService.GetFilename(Settings.Default.TemplateClip, clipDownloadPage.textTitle.Text, clipDownloadPage.clipId,
                             clipDownloadPage.currentVideoTime, clipDownloadPage.textStreamer.Text, TimeSpan.Zero, clipDownloadPage.clipLength,
-                            clipDownloadPage.viewCount.ToString(), clipDownloadPage.game) + ".mp4"),
+                            clipDownloadPage.viewCount, clipDownloadPage.game) + ".mp4"),
                         Id = clipDownloadPage.clipId,
                         Quality = clipDownloadPage.comboQuality.Text,
                         ThrottleKib = Settings.Default.DownloadThrottleEnabled
@@ -267,7 +277,7 @@ namespace TwitchDownloaderWPF
                         chatOptions.EmbedData = checkEmbed.IsChecked.GetValueOrDefault();
                         chatOptions.Filename = Path.Combine(folderPath, FilenameService.GetFilename(Settings.Default.TemplateChat, downloadTask.Info.Title, chatOptions.Id,
                             clipDownloadPage.currentVideoTime, clipDownloadPage.textStreamer.Text, TimeSpan.Zero, clipDownloadPage.clipLength,
-                            clipDownloadPage.viewCount.ToString(), clipDownloadPage.game) + "." + chatOptions.FileExtension);
+                            clipDownloadPage.viewCount, clipDownloadPage.game) + "." + chatOptions.FileExtension);
                         chatOptions.FileCollisionCallback = HandleFileCollisionCallback;
 
                         ChatDownloadTask chatTask = new ChatDownloadTask
@@ -333,7 +343,7 @@ namespace TwitchDownloaderWPF
                     chatOptions.Filename = Path.Combine(folderPath, FilenameService.GetFilename(Settings.Default.TemplateChat, chatDownloadPage.textTitle.Text, chatOptions.Id,chatDownloadPage.currentVideoTime, chatDownloadPage.textStreamer.Text,
                         chatOptions.TrimBeginning ? TimeSpan.FromSeconds(chatOptions.TrimBeginningTime) : TimeSpan.Zero,
                         chatOptions.TrimEnding ? TimeSpan.FromSeconds(chatOptions.TrimEndingTime) : chatDownloadPage.vodLength,
-                        chatDownloadPage.viewCount.ToString(), chatDownloadPage.game) + "." + chatOptions.FileExtension);
+                        chatDownloadPage.viewCount, chatDownloadPage.game) + "." + chatOptions.FileExtension);
                     chatOptions.FileCollisionCallback = HandleFileCollisionCallback;
 
                     ChatDownloadTask chatTask = new ChatDownloadTask
@@ -393,7 +403,7 @@ namespace TwitchDownloaderWPF
                     chatOptions.OutputFile = Path.Combine(folderPath, FilenameService.GetFilename(Settings.Default.TemplateChat, chatUpdatePage.textTitle.Text, chatUpdatePage.VideoId, chatUpdatePage.VideoCreatedAt, chatUpdatePage.textStreamer.Text,
                         chatOptions.TrimBeginning ? TimeSpan.FromSeconds(chatOptions.TrimBeginningTime) : TimeSpan.Zero,
                         chatOptions.TrimEnding ? TimeSpan.FromSeconds(chatOptions.TrimEndingTime) : chatUpdatePage.VideoLength,
-                        chatUpdatePage.ViewCount.ToString(), chatUpdatePage.Game) + "." + chatOptions.FileExtension);
+                        chatUpdatePage.ViewCount, chatUpdatePage.Game) + "." + chatOptions.FileExtension);
                     chatOptions.FileCollisionCallback = HandleFileCollisionCallback;
 
                     ChatUpdateTask chatTask = new ChatUpdateTask
@@ -495,7 +505,7 @@ namespace TwitchDownloaderWPF
                         downloadOptions.Filename = Path.Combine(folderPath, FilenameService.GetFilename(Settings.Default.TemplateVod, taskData.Title, taskData.Id, taskData.Time, taskData.Streamer,
                             downloadOptions.TrimBeginning ? downloadOptions.TrimBeginningTime : TimeSpan.Zero,
                             downloadOptions.TrimEnding ? downloadOptions.TrimEndingTime : TimeSpan.FromSeconds(taskData.Length),
-                            taskData.Views.ToString(), taskData.Game) + ".mp4");
+                            taskData.Views, taskData.Game) + ".mp4");
 
                         VodDownloadTask downloadTask = new VodDownloadTask
                         {
@@ -520,7 +530,7 @@ namespace TwitchDownloaderWPF
                             Id = taskData.Id,
                             Quality = (ComboPreferredQuality.SelectedItem as ComboBoxItem)?.Content as string,
                             Filename = Path.Combine(folderPath, FilenameService.GetFilename(Settings.Default.TemplateClip, taskData.Title, taskData.Id, taskData.Time, taskData.Streamer,
-                                TimeSpan.Zero, TimeSpan.FromSeconds(taskData.Length), taskData.Views.ToString(), taskData.Game) + ".mp4"),
+                                TimeSpan.Zero, TimeSpan.FromSeconds(taskData.Length), taskData.Views, taskData.Game) + ".mp4"),
                             ThrottleKib = Settings.Default.DownloadThrottleEnabled
                                 ? Settings.Default.MaximumBandwidthKib
                                 : -1,
@@ -569,7 +579,7 @@ namespace TwitchDownloaderWPF
                     downloadOptions.Filename = Path.Combine(folderPath, FilenameService.GetFilename(Settings.Default.TemplateChat, taskData.Title, taskData.Id, taskData.Time, taskData.Streamer,
                         downloadOptions.TrimBeginning ? TimeSpan.FromSeconds(downloadOptions.TrimBeginningTime) : TimeSpan.Zero,
                         downloadOptions.TrimEnding ? TimeSpan.FromSeconds(downloadOptions.TrimEndingTime) : TimeSpan.FromSeconds(taskData.Length),
-                        taskData.Views.ToString(), taskData.Game) + "." + downloadOptions.FileExtension);
+                        taskData.Views, taskData.Game) + "." + downloadOptions.FileExtension);
 
                     ChatDownloadTask downloadTask = new ChatDownloadTask
                     {
@@ -719,6 +729,17 @@ namespace TwitchDownloaderWPF
                     TextPreferredQuality.Foreground = newBrush;
                 }
                 catch { /* Ignored */ }
+            }
+        }
+
+        private void ComboPreferredQuality_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!IsInitialized)
+                return;
+
+            if (ComboPreferredQuality.SelectedItem is ComboBoxItem { Content: string preferredQuality })
+            {
+                Settings.Default.PreferredQuality = preferredQuality;
             }
         }
     }

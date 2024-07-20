@@ -27,7 +27,6 @@ namespace TwitchDownloaderWPF
     /// </summary>
     public partial class PageChatDownload : Page
     {
-
         public DownloadType downloadType;
         public string downloadId;
         public int streamerId;
@@ -56,7 +55,21 @@ namespace TwitchDownloaderWPF
             {
                 ChatFormat.Text => radioText.IsChecked = true,
                 ChatFormat.Html => radioHTML.IsChecked = true,
-                _ => radioJson.IsChecked = true
+                ChatFormat.Json => radioJson.IsChecked = true,
+                _ => null,
+            };
+            _ = (ChatCompression)Settings.Default.ChatJsonCompression switch
+            {
+                ChatCompression.None => radioCompressionNone.IsChecked = true,
+                ChatCompression.Gzip => radioCompressionGzip.IsChecked = true,
+                _ => null,
+            };
+            _ = (TimestampFormat)Settings.Default.ChatTextTimestampStyle switch
+            {
+                TimestampFormat.Utc => radioTimestampUTC.IsChecked = true,
+                TimestampFormat.Relative => radioTimestampRelative.IsChecked = true,
+                TimestampFormat.None => radioTimestampNone.IsChecked = true,
+                _ => null,
             };
         }
 
@@ -212,7 +225,7 @@ namespace TwitchDownloaderWPF
 
         public static string ValidateUrl(string text)
         {
-            var vodClipIdMatch = TwitchRegex.MatchVideoOrClipId(text);
+            var vodClipIdMatch = IdParse.MatchVideoOrClipId(text);
             return vodClipIdMatch is { Success: true }
                 ? vodClipIdMatch.Value
                 : null;
@@ -453,7 +466,7 @@ namespace TwitchDownloaderWPF
                 FileName = FilenameService.GetFilename(Settings.Default.TemplateChat, textTitle.Text, downloadId, currentVideoTime, textStreamer.Text,
                     CheckTrimStart.IsChecked == true ? new TimeSpan((int)numStartHour.Value, (int)numStartMinute.Value, (int)numStartSecond.Value) : TimeSpan.Zero,
                     CheckTrimEnd.IsChecked == true ? new TimeSpan((int)numEndHour.Value, (int)numEndMinute.Value, (int)numEndSecond.Value) : vodLength,
-                    viewCount.ToString(), game)
+                    viewCount, game)
             };
 
             if (radioJson.IsChecked == true)
@@ -584,7 +597,6 @@ namespace TwitchDownloaderWPF
             SetEnabledTrimEnd(CheckTrimEnd.IsChecked.GetValueOrDefault());
         }
 
-
         private void MenuItemEnqueue_Click(object sender, RoutedEventArgs e)
         {
             var queueOptions = new WindowQueueOptions(this)
@@ -602,6 +614,51 @@ namespace TwitchDownloaderWPF
                 await GetVideoInfo();
                 e.Handled = true;
             }
+        }
+
+        private void RadioCompressionNone_OnCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (!IsInitialized)
+                return;
+
+            Settings.Default.ChatJsonCompression = (int)ChatCompression.None;
+            Settings.Default.Save();
+        }
+
+        private void RadioCompressionGzip_OnCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (!IsInitialized)
+                return;
+
+            Settings.Default.ChatJsonCompression = (int)ChatCompression.Gzip;
+            Settings.Default.Save();
+        }
+
+        private void RadioTimestampUTC_OnCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (!IsInitialized)
+                return;
+
+            Settings.Default.ChatTextTimestampStyle = (int)TimestampFormat.Utc;
+            Settings.Default.Save();
+        }
+
+        private void RadioTimestampRelative_OnCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (!IsInitialized)
+                return;
+
+            Settings.Default.ChatTextTimestampStyle = (int)TimestampFormat.Relative;
+            Settings.Default.Save();
+        }
+
+        private void RadioTimestampNone_OnCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (!IsInitialized)
+                return;
+
+            Settings.Default.ChatTextTimestampStyle = (int)TimestampFormat.None;
+            Settings.Default.Save();
         }
     }
 }

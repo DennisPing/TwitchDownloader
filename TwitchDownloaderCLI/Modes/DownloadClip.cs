@@ -21,7 +21,7 @@ namespace TwitchDownloaderCLI.Modes
                 FfmpegHandler.DetectFfmpeg(inputOptions.FfmpegPath, progress);
             }
 
-            var collisionHandler = new FileCollisionHandler(inputOptions);
+            var collisionHandler = new FileCollisionHandler(inputOptions, progress);
             var downloadOptions = GetDownloadOptions(inputOptions, collisionHandler, progress);
 
             var clipDownloader = new ClipDownloader(downloadOptions, progress);
@@ -36,7 +36,7 @@ namespace TwitchDownloaderCLI.Modes
                 Environment.Exit(1);
             }
 
-            var clipIdMatch = TwitchRegex.MatchClipId(inputOptions.Id);
+            var clipIdMatch = IdParse.MatchClipId(inputOptions.Id);
             if (clipIdMatch is not { Success: true })
             {
                 logger.LogError("Unable to parse Clip ID/URL.");

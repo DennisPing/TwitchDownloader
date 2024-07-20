@@ -31,7 +31,7 @@ Also can concatenate/combine/merge Transport Stream files, either those parts do
 (Default: `true`) Displays a banner containing version and copyright information.
 
 **--log-level**
-(Default: `Status,Info,Warning,Error`) Sets the log level flags. Applicable values are: `None`, `Status`, `Verbose`, `Info`, `Warning`, `Error`, `Ffmpeg`. When `None` is passed, any other log level flags are ignored and `--banner=false` is implied.
+(Default: `Status,Info,Warning,Error`) Sets the log level flags. Applicable values are: `None`, `Status`, `Verbose`, `Info`, `Warning`, `Error`, `Ffmpeg`. When `None` is passed, any other log level flags are ignored and `--banner=false` is implied. See [Enum flags](#enum-flag-arguments) for more help.
 
 ## Arguments for mode videodownload
 #### Downloads a stream VOD or highlight from Twitch
@@ -56,6 +56,9 @@ Time to trim ending. See [Time durations](#time-durations) for a more detailed e
 
 **--bandwidth**
 (Default: `-1`) The maximum bandwidth a thread will be allowed to use in kibibytes per second (KiB/s), or `-1` for no maximum.
+
+**--trim-mode**
+(Default: `Exact`) Sets the video trim handling. Videos trimmed with exact trim may rarely experience video/audio stuttering within the first/last few seconds. Safe trimming is guaranteed to not stutter but may result in a slightly longer video. Valid values are: `Safe`, `Exact`.
 
 **--oauth**
 OAuth access token to download subscriber only VODs. <ins>**DO NOT SHARE YOUR OAUTH TOKEN WITH ANYONE.**</ins>
@@ -285,7 +288,7 @@ Other = `1`, Broadcaster = `2`, Moderator = `4`, VIP = `8`, Subscriber = `16`, P
 (Default: `false`) Alternates the background color of every other chat message to help tell them apart.
 
 **--readable-colors**
-(Default: `false`) Increases the contrast of usernames against the background or outline color.
+(Default: `true`) Increases the contrast of usernames against the background or outline color.
 
 **--offline**
 (Default: `false`) Render completely offline using only embedded emotes, badges, and bits from the input json.
